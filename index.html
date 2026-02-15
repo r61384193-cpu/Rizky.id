@@ -3,670 +3,654 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toko Rizky.ID - Penjualan Buku Digital</title>
-    
-    <!-- === CSS Styles === -->
+    <meta name="author" content="ZetaGo-Aurum | Rayhan Dzaky | KYOKO">
+    <meta name="description" content="Toko Rizky.ID — Pusat Penjualan Buku Digital Terlaris. Belajar Crypto, Saham, Forex dari Nol.">
+    <title>Toko Rizky.ID — Buku Digital Premium</title>
+
+    <!-- ============================================================
+         CDN DEPENDENCIES
+         Jangan hapus bagian ini, ini adalah library yang dibutuhkan.
+    ============================================================ -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: { sans: ['Inter', 'sans-serif'], heading: ['Outfit', 'sans-serif'] },
+                colors: {
+                    dark: { 900: '#0b1120', 800: '#0f172a', 700: '#1e293b', 600: '#334155' },
+                    accent: { cyan: '#06b6d4', purple: '#8b5cf6', pink: '#ec4899' },
+                    glass: { light: 'rgba(255,255,255,0.06)', border: 'rgba(255,255,255,0.1)' }
+                }
+            }
+        }
+    }
+    </script>
+
     <style>
-        :root {
-            --primary-color: #2563eb;
-            --secondary-color: #1e293b;
-            --accent-color: #3b82f6;
-            --text-light: #f8fafc;
-            --text-dark: #1e293b;
-            --bg-light: #f1f5f9;
-            --success-color: #10b981;
-            --transition: all 0.3s ease;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        a { text-decoration: none; color: inherit; }
-        ul { list-style: none; }
-
-        /* === Navbar === */
-        header {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .navbar {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            cursor: pointer;
-        }
-
-        .nav-links { display: flex; gap: 2rem; align-items: center; }
-        .nav-links a { font-weight: 500; transition: var(--transition); }
-        .nav-links a:hover { color: var(--primary-color); }
-
-        .btn-nav, .btn-hero {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 0.6rem 1.5rem;
-            border-radius: 50px;
-            transition: var(--transition);
-            cursor: pointer;
-            border: none;
-            font-size: 1rem;
-            display: inline-block;
-        }
-
-        .btn-nav:hover, .btn-hero:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            margin-right: 1rem;
-        }
-        .btn-outline:hover { background: var(--primary-color); color: white; }
-
-        /* === Hero Section === */
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
-            padding: 0 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .shape {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(60px);
-            opacity: 0.6;
-            z-index: 0;
-        }
-        .shape-1 { top: -50px; left: -50px; width: 400px; height: 400px; background: rgba(37, 99, 235, 0.2); animation: float 6s infinite alternate; }
-        .shape-2 { bottom: -50px; right: -50px; width: 300px; height: 300px; background: rgba(59, 130, 246, 0.2); animation: float 8s infinite alternate-reverse; }
-
-        @keyframes float { 0% { transform: translateY(0); } 100% { transform: translateY(-20px); } }
-
-        .hero-content { position: relative; z-index: 1; max-width: 800px; }
-
-        .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; color: var(--secondary-color); line-height: 1.2; animation: fadeInUp 1s ease-out; }
-        .hero h1 span { color: var(--primary-color); }
-        .hero p { font-size: 1.2rem; margin-bottom: 2rem; color: #64748b; animation: fadeInUp 1s ease-out 0.2s backwards; }
-        
-        .btn-hero {
-            background-color: var(--secondary-color);
-            padding: 1rem 2.5rem;
-            border-radius: 5px;
-            font-weight: 600;
-            animation: fadeInUp 1s ease-out 0.4s backwards;
-        }
-
-        /* === Dashboard Section === */
-        #dashboard-section {
-            display: none; 
-            padding-top: 100px;
-            background: white;
-            min-height: 100vh;
-        }
-
-        .dashboard-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .welcome-banner {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
-        }
-
-        .welcome-banner h2 { font-size: 2rem; margin-bottom: 0.5rem; }
-        .welcome-banner p { opacity: 0.9; }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--bg-light);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-left: 5px solid var(--primary-color);
-        }
-
-        .stat-card h3 { font-size: 2rem; color: var(--secondary-color); }
-        .stat-card p { color: #64748b; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* === Product Gallery === */
-        .container { max-width: 1200px; margin: 0 auto; padding: 6rem 2rem; }
-        .section-title { text-align: center; margin-bottom: 4rem; }
-        .section-title h2 { font-size: 2.5rem; margin-bottom: 1rem; color: var(--secondary-color); }
-        .section-title p { color: #64748b; max-width: 600px; margin: 0 auto; }
-
-        .image-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 2rem; 
-        }
-
-        .image-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: var(--transition);
-            border: 1px solid rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .image-card:hover { 
-            transform: translateY(-10px); 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
-        }
-
-        .product-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.5s ease;
-        }
-
-        .image-card:hover .product-image { transform: scale(1.05); }
-
-        .image-caption {
-            padding: 1.5rem;
-            text-align: center;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .image-caption h3 { margin-bottom: 0.5rem; font-size: 1.2rem; color: var(--secondary-color); }
-        
-        .price {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--success-color);
-            margin-bottom: 1rem;
-        }
-
-        .btn-buy {
-            background-color: var(--success-color);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
-            width: 100%;
-        }
-
-        .btn-buy:hover {
-            background-color: #059669;
-            transform: scale(1.05);
-        }
-
-        /* === MODAL LOGIN === */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition);
-        }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-
-        .modal-box {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 400px;
-            position: relative;
-            transform: translateY(-50px);
-            transition: transform 0.4s ease;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-        .modal-overlay.active .modal-box { transform: translateY(0); }
-
-        .close-btn {
-            position: absolute;
-            top: 15px; right: 20px;
-            font-size: 1.5rem;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .close-btn:hover { color: var(--secondary-color); }
-
-        .modal-title { text-align: center; margin-bottom: 2rem; color: var(--secondary-color); font-size: 1.8rem; }
-
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; }
-        .form-group input {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: var(--transition);
-            outline: none;
-        }
-        .form-group input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-
-        .btn-submit {
-            width: 100%;
-            padding: 1rem;
-            border: none;
-            border-radius: 10px;
-            background-color: var(--primary-color);
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .btn-submit:hover { background-color: var(--secondary-color); }
-
-        .form-footer { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: #64748b; }
-        .form-footer a { color: var(--primary-color); font-weight: 600; }
-
-        footer { background-color: var(--secondary-color); color: white; text-align: center; padding: 2rem; }
-
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hero h1 { font-size: 2.5rem; }
-            .navbar > div { display: flex; gap: 0.5rem; }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: #0b1120; color: #e2e8f0; overflow-x: hidden; }
+        .font-heading { font-family: 'Outfit', sans-serif; }
+        .glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); }
+        .glass-strong { background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.12); }
+        .gradient-text { background: linear-gradient(135deg, #06b6d4, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .gradient-border { border-image: linear-gradient(135deg, #06b6d4, #8b5cf6) 1; }
+        .btn-gradient { background: linear-gradient(135deg, #06b6d4, #8b5cf6); transition: all 0.3s ease; }
+        .btn-gradient:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(6,182,212,0.3); }
+        .btn-google { background: white; color: #333; transition: all 0.3s ease; }
+        .btn-google:hover { background: #f0f0f0; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255,255,255,0.15); }
+        .card-hover { transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(6,182,212,0.15); border-color: rgba(6,182,212,0.3); }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; pointer-events: none; }
+        .fade-in { animation: fadeIn 0.6s ease-out; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-20px); } }
+        @keyframes pulse-glow { 0%,100% { opacity:0.4; } 50% { opacity:0.7; } }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+        .watermark-badge { position:fixed; bottom:16px; right:16px; z-index:9999; font-size:11px; padding:6px 14px; border-radius:20px; }
+        ::-webkit-scrollbar { width:6px; } ::-webkit-scrollbar-track { background:#0b1120; } ::-webkit-scrollbar-thumb { background:#334155; border-radius:3px; }
+        .toast { position:fixed; top:24px; right:24px; z-index:10000; padding:16px 24px; border-radius:12px; animation: slideIn 0.4s ease; }
+        @keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <div id="root"></div>
 
-    <!-- Header -->
-    <header>
-        <nav class="navbar">
-            <div class="logo">Toko Rizky<span style="color:var(--secondary-color)">.ID</span></div>
-            <ul class="nav-links">
-                <li><a href="#" onclick="showHome()">Beranda</a></li>
-                <li><a href="#gallery">Koleksi</a></li>
-                <li><a href="#" onclick="checkLoginAndScroll()">Dashboard</a></li>
-            </ul>
-            <div id="auth-buttons">
-                <button class="btn-nav btn-outline" onclick="openModal()">Masuk</button>
-                <a href="#" class="btn-nav">Daftar</a>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Modal Login -->
-    <div class="modal-overlay" id="loginModal">
-        <div class="modal-box">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2 class="modal-title">Login Akun</h2>
-            <form onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" placeholder="nama@email.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="Masukkan password" required>
-                </div>
-                <button type="submit" class="btn-submit">Login</button>
-                <div class="form-footer">
-                    Belum punya akun? <a href="#">Daftar Sekarang</a>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Hero Section -->
-    <section class="hero" id="hero-section">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-        <div class="hero-content">
-            <h1> <span>Toko Penjualan Buku Digital</span></h1>
-            <p>Website Penjualan Buku Digital Terlaris.</p>
-            <a href="#gallery" class="btn-hero">Belanja Sekarang</a>
-        </div>
-    </section>
-
-    <!-- Dashboard Section -->
-    <section id="dashboard-section">
-        <div class="dashboard-container">
-            <div class="welcome-banner">
-                <h2>Selamat Datang, <span id="user-name">Pengguna</span>!</h2>
-                <p>Perpustakaan digital Anda. Kelola pembelian dan baca buku favorit Anda.</p>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <!-- Data diisi dinamis oleh JS -->
-                    <h3 id="stat-books">0</h3>
-                    <p>Total Buku Dibeli</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="stat-reading">0</h3>
-                    <p>Sedang Dibaca</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="stat-wishlist">0</h3>
-                    <p>Wishlist</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="stat-spent">Rp 0</h3>
-                    <p>Total Belanja</p>
-                </div>
-            </div>
-
-            <div style="background: var(--bg-light); padding: 1.5rem; border-radius: 10px;">
-                <h3 style="margin-bottom: 1rem;">Riwayat Pembelian Terbaru</h3>
-                <div id="purchase-history">
-                    <!-- Diisi dinamis oleh JS -->
-                    <p style="color: #64748b;">Anda belum melakukan pembelian.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Product Gallery Section -->
-    <section id="gallery" class="container">
-        <div class="section-title">
-            <h2>Koleksi Buku Terlaris</h2>
-            <p>Pilih buku digital favorit Anda. Klik "Beli Sekarang" untuk menambahkan ke perpustakaan Anda.</p>
-        </div>
-        <div class="image-grid">
-            
-            <!-- Produk 1 -->
-            <div class="image-card">
-                <img src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTuqR8nVMO3l85VnHJCQwbAp8Fmqg8ULOAj0yXnZAba5-ejypfwkGF1F1kmD254LmIBh5YhVmINnESljk4x1_YC93lyz_00tfjeHI6GYx3Y-asIGL-LajhR5JjbHHVkKm3m2EnOv4g&usqp=CAc" alt="Buku Teknologi" class="product-image">
-                <div class="image-caption">
-                    <div>
-                        <h3>Master Crypto</h3>
-                        <p>Buku Pembelajaran Cyrpto dari Nol.</p>
-                        <div class="price">Rp 15.000</div>
-                    </div>
-                    <button class="btn-buy" onclick="buyBook('Master Cyrpto', 15000)">
-                        <i class="fas fa-shopping-cart"></i> Beli Sekarang
-                    </button>
-                </div>
-            </div>
-
-            <!-- Produk 2 -->
-            <div class="image-card">
-                <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTaz34XhKCMcQ06pue0sZ4xtcLi0D9ASFy4g8aKis3N44yf_cpt5hM7ug8-UCbhC4r5hIy7xaIMbpnzgZAlL9PXvKabUeVRtbqPGgAUrGuWje2CVmAOxPGXX3vh4Q&usqp=CAc" alt="Self Improvement" class="product-image">
-                <div class="image-caption">
-                    <div>
-                        <h3>Master Saham</h3>
-                        <p>Buku Pembelajar Saham dari Nol.</p>
-                        <div class="price">Rp 15.000</div>
-                    </div>
-                    <button class="btn-buy" onclick="buyBook('Master Saham', 15000)">
-                        <i class="fas fa-shopping-cart"></i> Beli Sekarang
-                    </button>
-                </div>
-            </div>
-
-            <!-- Produk 3 -->
-            <div class="image-card">
-                <img src="data:image/jpeg;base64,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" alt="Novel" class="product-image">
-                <div class="image-caption">
-                    <div>
-                        <h3>Master Forex</h3>
-                        <p>Buku Pembelajaran Forex dari Nol.</p>
-                        <div class="price">Rp 15.000</div>
-                    </div>
-                    <button class="btn-buy" onclick="buyBook('Master Forex', 15000)">
-                        <i class="fas fa-shopping-cart"></i> Beli Sekarang
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 Toko Rizky.ID. Dibuat dengan <i class="fas fa-heart" style="color:red"></i> di Indonesia.</p>
-    </footer>
-
-    <!-- JavaScript -->
+    <!-- ============================================================
+         FIREBASE INITIALIZATION
+         Ini adalah konfigurasi Firebase. Jangan diubah kecuali
+         kamu ingin ganti ke project Firebase lain.
+    ============================================================ -->
     <script>
-        // === STATE MANAGEMENT ===
-        // Inisialisasi data dasar jika belum ada
-        if (!localStorage.getItem('users')) {
-            localStorage.setItem('users', JSON.stringify([]));
-        }
+    const firebaseConfig = {
+        apiKey: "AIzaSyChYqRWtR-RfrPYn_DY-aGJ5rOLPvOBeKI",
+        authDomain: "server-media-75fdc.firebaseapp.com",
+        projectId: "server-media-75fdc",
+        storageBucket: "server-media-75fdc.firebasestorage.app",
+        messagingSenderId: "846086849982",
+        appId: "1:846086849982:web:3cd1d22f7956bd4e7b25ef",
+        measurementId: "G-TXCRRHB08S"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const googleProvider = new firebase.auth.GoogleAuthProvider();
+    </script>
 
-        // Cek status login saat halaman dimuat
-        window.onload = function() {
-            updateUI();
-            updateDashboardData(); // Pastikan dashboard terisi data lama jika sudah login
+    <!-- ============================================================
+         REACT APPLICATION (Babel JSX)
+         Semua komponen aplikasi ada di bawah ini.
+    ============================================================ -->
+    <script type="text/babel">
+    const { useState, useEffect, useCallback, useRef } = React;
+
+    /* ==============================================================
+       =================== DAFTAR PRODUK ===========================
+       ==============================================================
+       CARA MENAMBAH PRODUK BARU:
+       1. Salin (copy) salah satu objek { } di bawah ini
+       2. Tempel (paste) di bawah produk terakhir (sebelum tanda ])
+       3. Ganti: id (harus unik/beda), name, price, description, image, category
+       4. Simpan file, lalu refresh browser
+
+       CONTOH menambah produk baru:
+       {
+         id: 4,
+         name: "Nama Buku Baru",
+         price: 25000,
+         description: "Deskripsi singkat buku.",
+         image: "https://link-gambar-buku.com/gambar.jpg",
+         category: "bisnis"
+       },
+    ============================================================== */
+    const PRODUCTS = [
+        {
+            id: 1,
+            name: "Master Crypto",
+            price: 15000,
+            description: "Buku Pembelajaran Crypto dari Nol. Cocok untuk pemula yang ingin memahami dunia cryptocurrency.",
+            image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=300&fit=crop",
+            category: "investasi"
+        },
+        {
+            id: 2,
+            name: "Master Saham",
+            price: 15000,
+            description: "Buku Pembelajaran Saham dari Nol. Panduan lengkap investasi saham untuk pemula.",
+            image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=300&fit=crop",
+            category: "investasi"
+        },
+        {
+            id: 3,
+            name: "Master Forex",
+            price: 15000,
+            description: "Buku Pembelajaran Forex dari Nol. Strategi trading forex yang terbukti menguntungkan.",
+            image: "https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=400&h=300&fit=crop",
+            category: "investasi"
+        },
+        {
+            id: 4,
+            name: "Belajar Coding Untuk Pemula",
+            price: 20000,
+            description: "Buku Pembelajaran Coding untuk Pemula. Panduan Lengkap Belajar Pemrograman dari Nol.",
+            image:"https://www.gramedia.com/products/belajar-pemrograman-web-untuk-pemula-1",
+            category: "teknologi"
+        }
+        /* ← Tambahkan produk baru di sini (sebelum tanda kurung tutup) */
+    ];
+
+    /* ==============================================================
+       NOMOR WHATSAPP ADMIN
+       Ganti nomor di bawah ini dengan nomor WhatsApp admin/penjual.
+       Format: kode negara + nomor (tanpa +, tanpa spasi, tanpa strip)
+       Contoh Indonesia: 6281234567890
+    ============================================================== */
+    const ADMIN_WHATSAPP = "62895401061300";
+
+    /* ==============================================================
+       HELPER FUNCTIONS
+    ============================================================== */
+    const formatRupiah = (n) => "Rp " + n.toLocaleString("id-ID");
+    const getStorageKey = (uid, key) => `rizky_${uid}_${key}`;
+
+    const getUserData = (uid, key, fallback = []) => {
+        try { return JSON.parse(localStorage.getItem(getStorageKey(uid, key))) || fallback; }
+        catch { return fallback; }
+    };
+    const setUserData = (uid, key, data) => localStorage.setItem(getStorageKey(uid, key), JSON.stringify(data));
+
+    /* ==============================================================
+       TOAST NOTIFICATION COMPONENT
+    ============================================================== */
+    function Toast({ message, type, onClose }) {
+        useEffect(() => { const t = setTimeout(onClose, 3500); return () => clearTimeout(t); }, []);
+        const bg = type === 'success' ? 'bg-emerald-500/90' : type === 'error' ? 'bg-red-500/90' : 'bg-cyan-500/90';
+        const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+        return (
+            <div className={`toast ${bg} text-white backdrop-blur-md rounded-xl shadow-2xl flex items-center gap-3`}>
+                <i className={`fas ${icon} text-lg`}></i>
+                <span className="font-medium text-sm">{message}</span>
+            </div>
+        );
+    }
+
+    /* ==============================================================
+       NAVBAR COMPONENT
+    ============================================================== */
+    function Navbar({ user, page, setPage, onLogin, onLogout }) {
+        const [menuOpen, setMenuOpen] = useState(false);
+        const links = [
+            { id: 'home', label: 'Beranda', icon: 'fa-home' },
+            { id: 'catalog', label: 'Katalog', icon: 'fa-book-open' },
+        ];
+        if (user) {
+            links.push({ id: 'dashboard', label: 'Dashboard', icon: 'fa-chart-line' });
+            links.push({ id: 'wishlist', label: 'Wishlist', icon: 'fa-heart' });
+        }
+        return (
+            <header className="fixed top-0 w-full z-50 glass-strong">
+                <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
+                    <div className="font-heading font-bold text-xl sm:text-2xl cursor-pointer" onClick={() => setPage('home')}>
+                        <span className="gradient-text">Toko Rizky</span><span className="text-white">.ID</span>
+                    </div>
+                    {/* Desktop Nav */}
+                    <ul className="hidden md:flex items-center gap-1">
+                        {links.map(l => (
+                            <li key={l.id}>
+                                <button onClick={() => setPage(l.id)}
+                                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${page === l.id ? 'bg-white/10 text-cyan-400' : 'text-gray-300 hover:text-white hover:bg-white/5'}`}>
+                                    <i className={`fas ${l.icon} mr-2`}></i>{l.label}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                    <div className="hidden md:flex items-center gap-3">
+                        {user ? (
+                            <div className="flex items-center gap-3">
+                                <img src={user.photoURL || 'https://ui-avatars.com/api/?name='+user.displayName} alt="avatar"
+                                    className="w-8 h-8 rounded-full border-2 border-cyan-400/50"/>
+                                <span className="text-sm font-medium text-gray-300 max-w-[120px] truncate">{user.displayName}</span>
+                                <button onClick={onLogout} className="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-red-400 hover:bg-red-400/10 transition-all">
+                                    <i className="fas fa-sign-out-alt mr-1"></i>Logout
+                                </button>
+                            </div>
+                        ) : (
+                            <button onClick={onLogin} className="btn-google px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2">
+                                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-4 h-4" alt="G"/>
+                                Login Google
+                            </button>
+                        )}
+                    </div>
+                    {/* Mobile Toggle */}
+                    <button className="md:hidden text-gray-300 text-xl" onClick={() => setMenuOpen(!menuOpen)}>
+                        <i className={`fas ${menuOpen ? 'fa-times' : 'fa-bars'}`}></i>
+                    </button>
+                </nav>
+                {/* Mobile Menu */}
+                {menuOpen && (
+                    <div className="md:hidden glass-strong border-t border-white/5 fade-in">
+                        <div className="px-4 py-4 flex flex-col gap-2">
+                            {links.map(l => (
+                                <button key={l.id} onClick={() => { setPage(l.id); setMenuOpen(false); }}
+                                    className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all ${page === l.id ? 'bg-white/10 text-cyan-400' : 'text-gray-300 hover:bg-white/5'}`}>
+                                    <i className={`fas ${l.icon} mr-3`}></i>{l.label}
+                                </button>
+                            ))}
+                            <hr className="border-white/10 my-2"/>
+                            {user ? (
+                                <div className="flex items-center justify-between px-4 py-2">
+                                    <div className="flex items-center gap-3">
+                                        <img src={user.photoURL || ''} alt="" className="w-8 h-8 rounded-full"/>
+                                        <span className="text-sm text-gray-300">{user.displayName}</span>
+                                    </div>
+                                    <button onClick={() => { onLogout(); setMenuOpen(false); }} className="text-red-400 text-sm"><i className="fas fa-sign-out-alt"></i></button>
+                                </div>
+                            ) : (
+                                <button onClick={() => { onLogin(); setMenuOpen(false); }} className="btn-google px-5 py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 w-full">
+                                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-4 h-4" alt="G"/> Login dengan Google
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                )}
+            </header>
+        );
+    }
+
+    /* ==============================================================
+       HERO SECTION
+    ============================================================== */
+    function HeroSection({ onBrowse, onLogin, user }) {
+        return (
+            <section className="relative min-h-screen flex items-center justify-center px-4 pt-24 pb-12 overflow-hidden">
+                <div className="orb w-[300px] h-[300px] lg:w-[500px] lg:h-[500px] bg-cyan-500 top-[-100px] left-[-100px] animate-pulse-glow"></div>
+                <div className="orb w-[250px] h-[250px] lg:w-[400px] lg:h-[400px] bg-purple-600 bottom-[-50px] right-[-50px] animate-pulse-glow" style={{animationDelay:'2s'}}></div>
+                <div className="orb w-[200px] h-[200px] lg:w-[300px] lg:h-[300px] bg-pink-500 top-[40%] left-[60%] animate-pulse-glow" style={{animationDelay:'4s'}}></div>
+                <div className="text-center relative z-10 max-w-3xl mx-auto fade-in">
+                    <div className="inline-block px-4 py-1.5 rounded-full glass text-xs font-medium text-cyan-400 mb-6">
+                        <i className="fas fa-sparkles mr-2"></i>Platform Buku Digital Terpercaya
+                    </div>
+                    <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl xl:text-7xl font-extrabold mb-6 leading-tight">
+                        <span className="text-white">Toko Buku </span>
+                        <span className="gradient-text">Digital Premium</span>
+                    </h1>
+                    <p className="text-gray-400 text-sm sm:text-base md:text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
+                        Temukan koleksi buku digital terlaris untuk belajar Crypto, Saham, dan Forex dari nol. 
+                        Mulai investasi ilmu Anda hari ini.
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <button onClick={onBrowse} className="btn-gradient px-6 py-3 md:px-8 md:py-4 rounded-2xl text-white font-bold text-base md:text-lg flex items-center gap-3 shadow-lg">
+                            <i className="fas fa-book-open"></i> Lihat Katalog
+                        </button>
+                        {!user && (
+                            <button onClick={onLogin} className="btn-google px-6 py-3 md:px-8 md:py-4 rounded-2xl font-bold text-base md:text-lg flex items-center gap-3 shadow-lg">
+                                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="G"/> Login Google
+                            </button>
+                        )}
+                    </div>
+                    <div className="mt-8 md:mt-12 flex items-center justify-center gap-6 md:gap-8 text-gray-500 text-xs sm:text-sm">
+                        <div><span className="text-white font-bold text-2xl">500+</span><br/>Pembeli</div>
+                        <div className="w-px h-10 bg-white/10"></div>
+                        <div><span className="text-white font-bold text-2xl">50+</span><br/>Buku</div>
+                        <div className="w-px h-10 bg-white/10"></div>
+                        <div><span className="text-white font-bold text-2xl">4.9</span><br/>Rating</div>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    /* ==============================================================
+       PRODUCT CARD
+    ============================================================== */
+    function ProductCard({ product, user, wishlist, onToggleWish, onBuy }) {
+        const isWished = wishlist.includes(product.id);
+        return (
+            <div className="glass rounded-2xl overflow-hidden card-hover border border-white/5 flex flex-col group">
+                <div className="relative overflow-hidden h-48 sm:h-56">
+                    <img src={product.image} alt={product.name}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"/>
+                    <div className="absolute inset-0 bg-gradient-to-t from-dark-900/80 via-transparent to-transparent"></div>
+                    <span className="absolute top-3 left-3 px-3 py-1 glass rounded-full text-xs font-medium text-cyan-400 capitalize">{product.category}</span>
+                    {user && (
+                        <button onClick={() => onToggleWish(product.id)}
+                            className={`absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center transition-all ${isWished ? 'bg-pink-500 text-white' : 'glass text-gray-400 hover:text-pink-400'}`}>
+                            <i className={`fas fa-heart text-sm`}></i>
+                        </button>
+                    )}
+                </div>
+                <div className="p-5 flex flex-col flex-grow">
+                    <h3 className="font-heading font-bold text-lg text-white mb-1">{product.name}</h3>
+                    <p className="text-gray-400 text-sm mb-4 flex-grow">{product.description}</p>
+                    <div className="flex items-center justify-between">
+                        <span className="text-xl font-bold gradient-text">{formatRupiah(product.price)}</span>
+                        <button onClick={() => onBuy(product)} className="btn-gradient px-5 py-2.5 rounded-xl text-white text-sm font-semibold flex items-center gap-2">
+                            <i className="fab fa-whatsapp"></i> Beli
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    /* ==============================================================
+       CATALOG PAGE
+    ============================================================== */
+    function CatalogPage({ user, wishlist, onToggleWish, onBuy }) {
+        const [search, setSearch] = useState('');
+        const filtered = PRODUCTS.filter(p =>
+            p.name.toLowerCase().includes(search.toLowerCase()) ||
+            p.category.toLowerCase().includes(search.toLowerCase())
+        );
+        return (
+            <section className="pt-28 pb-20 px-4 min-h-screen fade-in">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-12">
+                        <h2 className="font-heading text-3xl sm:text-4xl font-bold text-white mb-3">Katalog <span className="gradient-text">Buku Digital</span></h2>
+                        <p className="text-gray-400 max-w-xl mx-auto">Pilih buku favorit Anda dan pesan langsung via WhatsApp.</p>
+                    </div>
+                    <div className="max-w-md mx-auto mb-10">
+                        <div className="glass rounded-xl flex items-center px-4 py-3">
+                            <i className="fas fa-search text-gray-500 mr-3"></i>
+                            <input type="text" placeholder="Cari buku..." value={search} onChange={e => setSearch(e.target.value)}
+                                className="bg-transparent outline-none text-white w-full text-sm placeholder:text-gray-500"/>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {filtered.map(p => <ProductCard key={p.id} product={p} user={user} wishlist={wishlist} onToggleWish={onToggleWish} onBuy={onBuy}/>)}
+                    </div>
+                    {filtered.length === 0 && <p className="text-center text-gray-500 mt-10">Tidak ada produk ditemukan.</p>}
+                </div>
+            </section>
+        );
+    }
+
+    /* ==============================================================
+       DASHBOARD PAGE
+    ============================================================== */
+    function DashboardPage({ user, history, wishlist, setPage }) {
+        const totalSpent = history.reduce((a, b) => a + b.price, 0);
+        const stats = [
+            { label: 'Total Pesanan', value: history.length, icon: 'fa-shopping-bag', color: 'text-cyan-400' },
+            { label: 'Total Belanja', value: formatRupiah(totalSpent), icon: 'fa-wallet', color: 'text-emerald-400' },
+            { label: 'Wishlist', value: wishlist.length, icon: 'fa-heart', color: 'text-pink-400' },
+            { label: 'Buku Tersedia', value: PRODUCTS.length, icon: 'fa-book', color: 'text-purple-400' },
+        ];
+        return (
+            <section className="pt-28 pb-20 px-4 min-h-screen fade-in">
+                <div className="max-w-7xl mx-auto">
+                    {/* Welcome Banner */}
+                    <div className="rounded-2xl p-6 sm:p-8 mb-8 bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 border border-white/10">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                            <img src={user.photoURL || ''} alt="" className="w-16 h-16 rounded-2xl border-2 border-cyan-400/50"/>
+                            <div>
+                                <h2 className="font-heading text-2xl sm:text-3xl font-bold text-white">Halo, {user.displayName}! 👋</h2>
+                                <p className="text-gray-400 mt-1">{user.email} — Perpustakaan digital Anda siap digunakan.</p>
+                            </div>
+                        </div>
+                    </div>
+                    {/* Stats */}
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                        {stats.map((s, i) => (
+                            <div key={i} className="glass rounded-2xl p-5 card-hover border border-white/5">
+                                <i className={`fas ${s.icon} ${s.color} text-2xl mb-3`}></i>
+                                <div className="text-2xl font-bold text-white font-heading">{s.value}</div>
+                                <div className="text-xs text-gray-500 uppercase tracking-wider mt-1">{s.label}</div>
+                            </div>
+                        ))}
+                    </div>
+                    {/* Purchase History */}
+                    <div className="glass rounded-2xl p-6 border border-white/5">
+                        <h3 className="font-heading font-bold text-lg text-white mb-4"><i className="fas fa-clock-rotate-left text-cyan-400 mr-2"></i>Riwayat Pesanan</h3>
+                        {history.length === 0 ? (
+                            <div className="text-center py-10 text-gray-500">
+                                <i className="fas fa-inbox text-4xl mb-3 block"></i>
+                                <p>Belum ada riwayat pesanan.</p>
+                                <button onClick={() => setPage('catalog')} className="btn-gradient px-5 py-2 rounded-xl text-white text-sm font-medium mt-4">Lihat Katalog</button>
+                            </div>
+                        ) : (
+                            <div className="space-y-3">
+                                {history.slice(0, 10).map((h, i) => (
+                                    <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-white/3 hover:bg-white/5 transition-all">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-lg bg-cyan-400/10 flex items-center justify-center"><i className="fas fa-book text-cyan-400"></i></div>
+                                            <div>
+                                                <div className="text-sm font-medium text-white">{h.name}</div>
+                                                <div className="text-xs text-gray-500">{h.date} • {h.time}</div>
+                                            </div>
+                                        </div>
+                                        <span className="text-sm font-bold text-emerald-400">{formatRupiah(h.price)}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    /* ==============================================================
+       WISHLIST PAGE
+    ============================================================== */
+    function WishlistPage({ user, wishlist, onToggleWish, onBuy }) {
+        const items = PRODUCTS.filter(p => wishlist.includes(p.id));
+        return (
+            <section className="pt-28 pb-20 px-4 min-h-screen fade-in">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-12">
+                        <h2 className="font-heading text-3xl sm:text-4xl font-bold text-white mb-3"><i className="fas fa-heart text-pink-400 mr-3"></i>Wishlist <span className="gradient-text">Saya</span></h2>
+                        <p className="text-gray-400">Produk yang sudah Anda simpan.</p>
+                    </div>
+                    {items.length === 0 ? (
+                        <div className="text-center py-20 text-gray-500">
+                            <i className="fas fa-heart-crack text-5xl mb-4 block"></i>
+                            <p className="text-lg">Wishlist masih kosong.</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {items.map(p => <ProductCard key={p.id} product={p} user={user} wishlist={wishlist} onToggleWish={onToggleWish} onBuy={onBuy}/>)}
+                        </div>
+                    )}
+                </div>
+            </section>
+        );
+    }
+
+    /* ==============================================================
+       FOOTER WITH WATERMARKS
+    ============================================================== */
+    function Footer() {
+        return (
+            <footer className="border-t border-white/5 py-10 px-4">
+                <div className="max-w-7xl mx-auto text-center">
+                    <div className="font-heading font-bold text-2xl mb-3"><span className="gradient-text">Toko Rizky</span><span className="text-white">.ID</span></div>
+                    <p className="text-gray-500 text-sm mb-4">Pusat Penjualan Buku Digital Terlaris di Indonesia</p>
+                    <div className="flex items-center justify-center gap-2 text-gray-600 text-xs mb-2">
+                        <span>Developed by</span>
+                        <span className="text-cyan-400 font-semibold">ZetaGo-Aurum</span>
+                        <span>•</span>
+                        <span className="text-purple-400 font-semibold">Rayhan Dzaky</span>
+                        <span>•</span>
+                        <span className="text-pink-400 font-semibold">KYOKO</span>
+                    </div>
+                    <p className="text-gray-700 text-xs mt-3">&copy; {new Date().getFullYear()} Toko Rizky.ID. All rights reserved.</p>
+                </div>
+            </footer>
+        );
+    }
+
+    /* ==============================================================
+       WATERMARK BADGE (fixed bottom-right)
+    ============================================================== */
+    function WatermarkBadge() {
+        return (
+            <div className="watermark-badge glass text-gray-500 hidden sm:flex items-center gap-2">
+                <span className="text-cyan-400 font-semibold">ZG-A</span>
+                <span>•</span>
+                <span className="text-purple-400">RD</span>
+                <span>•</span>
+                <span className="text-pink-400">KYOKO</span>
+            </div>
+        );
+    }
+
+    /* ==============================================================
+       MAIN APP — State, Auth, Routing
+    ============================================================== */
+    function App() {
+        const [user, setUser] = useState(null);
+        const [page, setPage] = useState('home');
+        const [wishlist, setWishlist] = useState([]);
+        const [history, setHistory] = useState([]);
+        const [toast, setToast] = useState(null);
+        const [authLoading, setAuthLoading] = useState(true);
+
+        const showToast = (message, type = 'info') => setToast({ message, type });
+
+        // Listen for Firebase Auth state change
+        useEffect(() => {
+            const unsub = auth.onAuthStateChanged((u) => {
+                setUser(u);
+                setAuthLoading(false);
+                if (u) {
+                    setWishlist(getUserData(u.uid, 'wishlist', []));
+                    setHistory(getUserData(u.uid, 'history', []));
+                }
+            });
+            return () => unsub();
+        }, []);
+
+        // Google Login
+        const handleLogin = async () => {
+            try {
+                await auth.signInWithPopup(googleProvider);
+                showToast('Login berhasil! Selamat datang 🎉', 'success');
+            } catch (err) {
+                if (err.code !== 'auth/popup-closed-by-user') {
+                    showToast('Login gagal: ' + err.message, 'error');
+                }
+            }
         };
 
-        // === FUNGSI LOGIN & LOGOUT ===
-        function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            
-            // Simulasi login sukses
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('userName', email.split('@')[0]);
+        // Logout
+        const handleLogout = async () => {
+            await auth.signOut();
+            setWishlist([]);
+            setHistory([]);
+            setPage('home');
+            showToast('Berhasil logout.', 'info');
+        };
 
-            // Inisialisasi data user baru jika belum ada
-            if (!localStorage.getItem('purchaseHistory')) {
-                localStorage.setItem('purchaseHistory', JSON.stringify([]));
-                localStorage.setItem('totalSpent', '0');
+        // Toggle Wishlist
+        const toggleWish = (id) => {
+            if (!user) { handleLogin(); return; }
+            let next;
+            if (wishlist.includes(id)) {
+                next = wishlist.filter(x => x !== id);
+                showToast('Dihapus dari wishlist', 'info');
+            } else {
+                next = [...wishlist, id];
+                showToast('Ditambahkan ke wishlist ❤️', 'success');
             }
+            setWishlist(next);
+            setUserData(user.uid, 'wishlist', next);
+        };
 
-            closeModal();
-            updateUI();
-            showDashboard();
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('userName');
-            // Opsional: Hapus data belanja saat logout jika ingin bersih, atau biarkan agar tetap ada saat login lagi (tergantung kebutuhan)
-            // localStorage.removeItem('purchaseHistory'); 
-            updateUI();
-            showHome();
-            alert("Anda telah berhasil logout.");
-        }
-
-        // === FUNGSI PEMBELIAN ===
-        function buyBook(title, price) {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-
-            if (!isLoggedIn) {
-                alert("Silakan login terlebih dahulu untuk membeli buku.");
-                openModal();
+        /* ==============================================================
+           BELI VIA WHATSAPP
+           Pesan akan dikirim ke WhatsApp admin dengan format profesional.
+           User harus login agar nama & email tercantum di pesan.
+        ============================================================== */
+        const handleBuy = (product) => {
+            if (!user) {
+                showToast('Silakan login terlebih dahulu untuk membeli.', 'error');
+                handleLogin();
                 return;
             }
+            const now = new Date();
+            const date = now.toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+            const time = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
 
-            // Konfirmasi pembelian
-            const confirmBuy = confirm(`Anda yakin ingin membeli "${title}" seharga Rp ${price.toLocaleString('id-ID')}?`);
-            if (!confirmBuy) return;
+            // Simpan ke riwayat
+            const entry = { name: product.name, price: product.price, date, time };
+            const newHist = [entry, ...history];
+            setHistory(newHist);
+            setUserData(user.uid, 'history', newHist);
 
-            // 1. Update Riwayat Pembelian
-            let history = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
-            history.unshift({ title: title, price: price, date: new Date().toLocaleDateString('id-ID') });
-            localStorage.setItem('purchaseHistory', JSON.stringify(history));
+            // Format pesan WhatsApp
+            const msg = `🛒 *PESANAN BARU — Toko Rizky.ID*
+━━━━━━━━━━━━━━━━━━━━━
 
-            // 2. Update Total Belanja
-            let currentTotal = parseInt(localStorage.getItem('totalSpent')) || 0;
-            currentTotal += price;
-            localStorage.setItem('totalSpent', currentTotal.toString());
+👤 *Nama Pemesan:* ${user.displayName}
+📧 *Email:* ${user.email}
 
-            // 3. Notifikasi & Refresh UI
-            alert(`Pembelian "${title}" berhasil! Buku telah ditambahkan ke perpustakaan Anda.`);
-            updateDashboardData();
-            
-            // Arahkan ke dashboard
-            showDashboard(); 
+📘 *Produk:* ${product.name}
+💰 *Harga:* ${formatRupiah(product.price)}
+
+📅 *Tanggal:* ${date}
+🕐 *Waktu:* ${time}
+
+📝 *Catatan:*
+Saya tertarik dengan produk ini dan ingin melanjutkan pembelian. Mohon infokan langkah selanjutnya ya 🙏
+
+Terima kasih! 😊
+━━━━━━━━━━━━━━━━━━━━━
+🔖 Dikirim dari Toko Rizky.ID`;
+
+            window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
+            showToast(`Pesanan "${product.name}" dikirim ke WhatsApp! 🚀`, 'success');
+        };
+
+        // Loading screen
+        if (authLoading) {
+            return (
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="text-center">
+                        <div className="w-12 h-12 border-4 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin mx-auto mb-4"></div>
+                        <p className="text-gray-500">Memuat...</p>
+                    </div>
+                </div>
+            );
         }
 
-        // === FUNGSI UPDATE UI ===
-        function updateUI() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const userName = localStorage.getItem('userName') || 'Pengguna';
-            const authButtons = document.getElementById('auth-buttons');
-            const dashboardSection = document.getElementById('dashboard-section');
-            const heroSection = document.getElementById('hero-section');
-            const welcomeName = document.getElementById('user-name');
-
-            welcomeName.innerText = userName;
-
-            if (isLoggedIn) {
-                authButtons.innerHTML = `
-                    <span style="margin-right: 10px; font-weight: 600; color: var(--secondary-color);">Hai, ${userName}</span>
-                    <button class="btn-nav" onclick="handleLogout()">Logout</button>
-                `;
-                dashboardSection.style.display = 'block';
-                heroSection.style.display = 'none';
-            } else {
-                authButtons.innerHTML = `
-                    <button class="btn-nav btn-outline" onclick="openModal()">Masuk</button>
-                    <a href="#" class="btn-nav">Daftar</a>
-                `;
-                dashboardSection.style.display = 'none';
-                heroSection.style.display = 'flex';
+        // Render current page
+        const renderPage = () => {
+            switch(page) {
+                case 'catalog':
+                    return <CatalogPage user={user} wishlist={wishlist} onToggleWish={toggleWish} onBuy={handleBuy}/>;
+                case 'dashboard':
+                    return user ? <DashboardPage user={user} history={history} wishlist={wishlist} setPage={setPage}/> : (handleLogin(), <HeroSection onBrowse={() => setPage('catalog')} onLogin={handleLogin} user={user}/>);
+                case 'wishlist':
+                    return user ? <WishlistPage user={user} wishlist={wishlist} onToggleWish={toggleWish} onBuy={handleBuy}/> : (handleLogin(), <HeroSection onBrowse={() => setPage('catalog')} onLogin={handleLogin} user={user}/>);
+                default:
+                    return <HeroSection onBrowse={() => setPage('catalog')} onLogin={handleLogin} user={user}/>;
             }
-        }
+        };
 
-        function updateDashboardData() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (!isLoggedIn) return;
-
-            const history = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
-            const totalSpent = parseInt(localStorage.getItem('totalSpent')) || 0;
-
-            // Update Statistik
-            document.getElementById('stat-books').innerText = history.length;
-            document.getElementById('stat-spent').innerText = "Rp " + totalSpent.toLocaleString('id-ID');
-            
-            // Update placeholder stats (random untuk simulasi)
-            document.getElementById('stat-reading').innerText = history.length > 0 ? Math.min(history.length, 2) : 0;
-            document.getElementById('stat-wishlist').innerText = Math.floor(Math.random() * 5); // Random contoh
-
-            // Update Riwayat Pembayaran
-            const historyContainer = document.getElementById('purchase-history');
-            if (history.length === 0) {
-                historyContainer.innerHTML = '<p style="color: #64748b;">Anda belum melakukan pembelian.</p>';
-            } else {
-                historyContainer.innerHTML = history.map(item => 
-                    `<p style="margin-top:0.5rem; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
-                        📚 <strong>${item.title}</strong> <span style="float:right; color:var(--success-color)">${item.price}</span>
-                        <br><small style="color:#94a3b8">Dibeli pada: ${item.date}</small>
-                    </p>`
-                ).join('');
-            }
-        }
-
-        // === FUNGSI NAVIGASI & MODAL ===
-        function showDashboard() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if(isLoggedIn) {
-                updateDashboardData(); // Refresh data sebelum show
-                document.getElementById('dashboard-section').scrollIntoView({ behavior: 'smooth' });
-            } else {
-                openModal();
-            }
-        }
-
-        function checkLoginAndScroll() {
-            showDashboard();
-        }
-
-        function showHome() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function openModal() {
-            document.getElementById('loginModal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('loginModal').classList.remove('active');
-        }
-
-        document.getElementById('loginModal').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
-    </script>
-  <script>
-    const adminWhatsApp = "62895401061300"; 
-    // GANTI dengan nomor WA kamu (tanpa +, tanpa spasi)
-
-    function buyBook(bookName, price) {
-        const message = `
-Halo Admin Toko Rizky.ID 👋
-Saya ingin membeli buku digital berikut:
-
-📘 Judul: ${bookName}
-💰 Harga: Rp ${price.toLocaleString("id-ID")}
-
-Mohon info cara pembayarannya.
-Terima kasih.
-        `.trim();
-
-        const encodedMessage = encodeURIComponent(message);
-        const waUrl = `https://wa.me/${adminWhatsApp}?text=${encodedMessage}`;
-
-        window.open(waUrl, "_blank");
+        return (
+            <div className="min-h-screen bg-dark-900">
+                <Navbar user={user} page={page} setPage={setPage} onLogin={handleLogin} onLogout={handleLogout}/>
+                {renderPage()}
+                <Footer/>
+                <WatermarkBadge/>
+                {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)}/>}
+            </div>
+        );
     }
-</script>
-</script>
 
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
 </body>
-
 </html>
-
-
-
